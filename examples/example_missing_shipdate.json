@@ -1,0 +1,78 @@
+{
+  "Id": "5af9ee9b-f15a-464a-9c5a-92a1db01deb5",
+  "Name": "Missing ShipDate",
+  "Metadata": {
+    "Description": "",
+    "Version": "1.0",
+    "Author": "Export",
+    "CreatedAt": "27/02/2026"
+  },
+  "Domains": [
+    {
+      "Name": "ShipDate",
+      "Description": "",
+      "DataType": 4
+    }
+  ],
+  "Rules": [
+    {
+      "Name": "BR_SetShiptDate_SetModifiedOn",
+      "Description": "Will take the DueDate, will add 1 day and will assign the new day to ShipDate.",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": true,
+      "Condition": {
+        "Operator": "always",
+        "Conditions": [],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "BR_Check_ShipDate_NULL",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": true,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "null",
+            "Conditions": [],
+            "DomainRef": "ShipDate",
+            "Value": ""
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "BR_SetShiptDate_SetModifiedOn",
+      "InvalidSuccessor": "BR_Validate_ShipDate"
+    },
+    {
+      "Name": "BR_Validate_ShipDate",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "gte",
+            "Conditions": [],
+            "DomainRef": "ShipDate",
+            "Value": "@Domain(OrderDate)"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": "BR_SetShiptDate_SetModifiedOn"
+    }
+  ]
+}
