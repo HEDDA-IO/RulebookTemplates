@@ -1,0 +1,206 @@
+{
+  "Id": "aa03e28b-921a-469d-b37f-91b8984ea6d8",
+  "Name": "Address Basic Validation",
+  "Metadata": {
+    "Description": "",
+    "Version": "1.0",
+    "Author": "Export",
+    "CreatedAt": "01/04/2026"
+  },
+  "Domains": [
+    {
+      "Name": "PostalCode",
+      "Description": "",
+      "DataType": 1
+    },
+    {
+      "Name": "AddressLine1",
+      "Description": "",
+      "DataType": 1
+    },
+    {
+      "Name": "City",
+      "Description": "",
+      "DataType": 1
+    },
+    {
+      "Name": "CountryRegion",
+      "Description": "",
+      "DataType": 1
+    }
+  ],
+  "Rules": [
+    {
+      "Name": "Format Check US",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Validity",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "regex",
+            "Conditions": [],
+            "DomainRef": "PostalCode",
+            "Value": "^\\d{5}(-\\d{4})?$"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Format Check CA",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Validity",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "regex",
+            "Conditions": [],
+            "DomainRef": "PostalCode",
+            "Value": "^[A-Z]\\d[A-Z] \\d[A-Z]\\d$"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Format Check UK",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Validity",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "regex",
+            "Conditions": [],
+            "DomainRef": "PostalCode",
+            "Value": "^[A-Z]{1,2}[0-9][0-9A-Z]? [0-9][A-Z]{2}$"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Fields not NULL",
+      "Description": "Trims the fields and ensures AddressLine1, City, StateProvince, and CountryRegion are always present and not null.",
+      "Version": "1.0",
+      "DQDimensionName": "Completeness",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "AddressLine1",
+            "Value": ""
+          },
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "City",
+            "Value": ""
+          },
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "CountryRegion",
+            "Value": ""
+          },
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "PostalCode",
+            "Value": ""
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "Is Country US",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "is Country UK",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": true,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "contains",
+            "Conditions": [],
+            "DomainRef": "CountryRegion",
+            "Value": "United Kigdome"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "Format Check UK",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Is Country CA",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": true,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "contains",
+            "Conditions": [],
+            "DomainRef": "CountryRegion",
+            "Value": "Canada"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "Format Check CA",
+      "InvalidSuccessor": "is Country UK"
+    },
+    {
+      "Name": "Is Country US",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": true,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "eq",
+            "Conditions": [],
+            "DomainRef": "CountryRegion",
+            "Value": "United States"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "Format Check US",
+      "InvalidSuccessor": "Is Country CA"
+    }
+  ]
+}
