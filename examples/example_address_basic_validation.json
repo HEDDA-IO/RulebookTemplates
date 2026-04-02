@@ -5,13 +5,18 @@
     "Description": "",
     "Version": "1.0",
     "Author": "Export",
-    "CreatedAt": "01/04/2026"
+    "CreatedAt": "02/04/2026"
   },
   "Domains": [
     {
       "Name": "PostalCode",
       "Description": "",
       "DataType": 1
+    },
+    {
+      "Name": "ModifiedDate",
+      "Description": "",
+      "DataType": 4
     },
     {
       "Name": "AddressLine1",
@@ -49,6 +54,34 @@
         "DomainRef": "",
         "Value": ""
       },
+      "ValidSuccessor": "ModifiedDate not in the Future",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "ModifiedDate not in the Future",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Timeliness",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "ModifiedDate",
+            "Value": ""
+          },
+          {
+            "Operator": "lte",
+            "Conditions": [],
+            "DomainRef": "ModifiedDate",
+            "Value": "@Domain(v_Now)"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
       "ValidSuccessor": "",
       "InvalidSuccessor": ""
     },
@@ -71,7 +104,7 @@
         "DomainRef": "",
         "Value": ""
       },
-      "ValidSuccessor": "",
+      "ValidSuccessor": "ModifiedDate not in the Future",
       "InvalidSuccessor": ""
     },
     {
@@ -93,7 +126,7 @@
         "DomainRef": "",
         "Value": ""
       },
-      "ValidSuccessor": "",
+      "ValidSuccessor": "ModifiedDate not in the Future",
       "InvalidSuccessor": ""
     },
     {

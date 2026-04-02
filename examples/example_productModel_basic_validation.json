@@ -1,0 +1,68 @@
+{
+  "Id": "13c41931-b533-4027-b2e1-322229650029",
+  "Name": "ProductModel Basic Validation",
+  "Metadata": {
+    "Description": "",
+    "Version": "1.0",
+    "Author": "Export",
+    "CreatedAt": "02/04/2026"
+  },
+  "Domains": [
+    {
+      "Name": "ModifiedDate",
+      "Description": "",
+      "DataType": 4
+    },
+    {
+      "Name": "Name",
+      "Description": "",
+      "DataType": 1
+    }
+  ],
+  "Rules": [
+    {
+      "Name": "ModifiedDate not in the Future",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Timeliness",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "lte",
+            "Conditions": [],
+            "DomainRef": "ModifiedDate",
+            "Value": "@Domain(v_Now)"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Name not NULL",
+      "Description": "Name must not be Null",
+      "Version": "1.0",
+      "DQDimensionName": "Completeness",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "Name",
+            "Value": ""
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "ModifiedDate not in the Future",
+      "InvalidSuccessor": ""
+    }
+  ]
+}

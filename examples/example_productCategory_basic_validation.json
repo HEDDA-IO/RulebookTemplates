@@ -1,0 +1,135 @@
+{
+  "Id": "51438924-c68a-41d8-b6b2-bff5c8c76f5c",
+  "Name": "Product Category Basic Validation",
+  "Metadata": {
+    "Description": "",
+    "Version": "1.0",
+    "Author": "Export",
+    "CreatedAt": "02/04/2026"
+  },
+  "Domains": [
+    {
+      "Name": "ParentProductCategoryID",
+      "Description": "",
+      "DataType": 2
+    },
+    {
+      "Name": "Name",
+      "Description": "",
+      "DataType": 1
+    },
+    {
+      "Name": "ModifiedDate",
+      "Description": "",
+      "DataType": 4
+    }
+  ],
+  "Rules": [
+    {
+      "Name": "SubCategory has Valid parent",
+      "Description": "If is not Null, it's a Sub Category and needs to have a Valid reference to a Parent Category.",
+      "Version": "1.0",
+      "DQDimensionName": "Consistency",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "ParentProductCategoryID",
+            "Value": ""
+          },
+          {
+            "Operator": "gt",
+            "Conditions": [],
+            "DomainRef": "ParentProductCategoryID",
+            "Value": "0"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "ModifiedDate not in the Future",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Name not NULL",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Completeness",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "Name",
+            "Value": ""
+          },
+          {
+            "Operator": "neq",
+            "Conditions": [],
+            "DomainRef": "Name",
+            "Value": " "
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "Route by Hierarchy Level",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Route by Hierarchy Level",
+      "Description": "If is Null, it's a Parent Category",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": true,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "null",
+            "Conditions": [],
+            "DomainRef": "ParentProductCategoryID",
+            "Value": ""
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "ModifiedDate not in the Future",
+      "InvalidSuccessor": "SubCategory has Valid parent"
+    },
+    {
+      "Name": "ModifiedDate not in the Future",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Timeliness",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "ModifiedDate",
+            "Value": ""
+          },
+          {
+            "Operator": "lte",
+            "Conditions": [],
+            "DomainRef": "ModifiedDate",
+            "Value": "@Domain(v_Now)"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": ""
+    }
+  ]
+}

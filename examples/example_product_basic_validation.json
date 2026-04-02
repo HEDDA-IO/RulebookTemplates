@@ -1,0 +1,300 @@
+{
+  "Id": "c112efab-7de0-4e60-9b0d-af48e8e8cef1",
+  "Name": "Product Basic Validation",
+  "Metadata": {
+    "Description": "",
+    "Version": "1.0",
+    "Author": "Export",
+    "CreatedAt": "02/04/2026"
+  },
+  "Domains": [
+    {
+      "Name": "SellEndDate",
+      "Description": "",
+      "DataType": 4
+    },
+    {
+      "Name": "DiscontinuedDate",
+      "Description": "",
+      "DataType": 4
+    },
+    {
+      "Name": "ProductNumber",
+      "Description": "",
+      "DataType": 1
+    },
+    {
+      "Name": "ModifiedDate",
+      "Description": "",
+      "DataType": 4
+    },
+    {
+      "Name": "ListPrice",
+      "Description": "",
+      "DataType": 2
+    },
+    {
+      "Name": "StandardCost",
+      "Description": "",
+      "DataType": 2
+    },
+    {
+      "Name": "Name",
+      "Description": "",
+      "DataType": 1
+    },
+    {
+      "Name": "SellStartDate",
+      "Description": "",
+      "DataType": 4
+    }
+  ],
+  "Rules": [
+    {
+      "Name": "SellEndDate not before SellStartDate",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Consistency",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "SellEndDate",
+            "Value": ""
+          },
+          {
+            "Operator": "gte",
+            "Conditions": [],
+            "DomainRef": "SellEndDate",
+            "Value": "@Domain(SellStartDate)"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": "DiscontinueDate Null Routing"
+    },
+    {
+      "Name": "DiscontinuedDate not before SellStartDate",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Consistency",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "DiscontinuedDate",
+            "Value": ""
+          },
+          {
+            "Operator": "gte",
+            "Conditions": [],
+            "DomainRef": "DiscontinuedDate",
+            "Value": "@Domain(SellStartDate)"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "ModifiedDate not in the future",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "DiscontinueDate Null Routing",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": true,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "null",
+            "Conditions": [],
+            "DomainRef": "DiscontinuedDate",
+            "Value": ""
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "ModifiedDate not in the future",
+      "InvalidSuccessor": "DiscontinuedDate not before SellStartDate"
+    },
+    {
+      "Name": "ProductNumber Valid",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Validity",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "regex",
+            "Conditions": [],
+            "DomainRef": "ProductNumber",
+            "Value": "^[A-Z]{2,3}-[A-Z0-9]{3,6}(-[A-Z0-9]{1,4})?$"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "Cost and Price Valid",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "ModifiedDate not in the future",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Timeliness",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "ModifiedDate",
+            "Value": ""
+          },
+          {
+            "Operator": "lte",
+            "Conditions": [],
+            "DomainRef": "ModifiedDate",
+            "Value": "@Domain(v_Now)"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Cost and Price Valid",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Validity",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "gt",
+            "Conditions": [],
+            "DomainRef": "ListPrice",
+            "Value": "0"
+          },
+          {
+            "Operator": "gt",
+            "Conditions": [],
+            "DomainRef": "StandardCost",
+            "Value": "0"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "ListPrice not below StandardCost",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "SellEndDate Null Routing",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "None",
+      "IsDataflowRule": true,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "null",
+            "Conditions": [],
+            "DomainRef": "SellEndDate",
+            "Value": ""
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "DiscontinueDate Null Routing",
+      "InvalidSuccessor": "SellEndDate not before SellStartDate"
+    },
+    {
+      "Name": "ListPrice not below StandardCost",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Accuracy",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "gte",
+            "Conditions": [],
+            "DomainRef": "ListPrice",
+            "Value": "@Domain(StandardCost)"
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "SellEndDate Null Routing",
+      "InvalidSuccessor": ""
+    },
+    {
+      "Name": "Product Basic Validation",
+      "Description": "",
+      "Version": "1.0",
+      "DQDimensionName": "Completeness",
+      "IsDataflowRule": false,
+      "Condition": {
+        "Operator": "and",
+        "Conditions": [
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "Name",
+            "Value": ""
+          },
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "ProductNumber",
+            "Value": ""
+          },
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "StandardCost",
+            "Value": ""
+          },
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "ListPrice",
+            "Value": ""
+          },
+          {
+            "Operator": "nnull",
+            "Conditions": [],
+            "DomainRef": "SellStartDate",
+            "Value": ""
+          }
+        ],
+        "DomainRef": "",
+        "Value": ""
+      },
+      "ValidSuccessor": "ProductNumber Valid",
+      "InvalidSuccessor": ""
+    }
+  ]
+}
